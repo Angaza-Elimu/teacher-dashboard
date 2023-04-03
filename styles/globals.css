@@ -1,9 +1,61 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --toastify-toast-width: 410px;
+}
+
+input:not(:focus) ~ label,
+input:focus ~ label,
+input:not(:placeholder-shown) ~ label {
+  @apply transform scale-90 -translate-y-6;
+}
+
+input:focus-within ~ label {
+  @apply text-primary-700;
+}
+
+input:not(:focus-within) ~ label {
+  @apply transform duration-300 scale-100 cursor-text font-normal;
+}
+
+.radial {
+  background: radial-gradient(91.2% 3588.74% at 50% 54.8%, #1b8ebf 0%, #0fa24a 98.44%);
+  opacity: 0.8;
+}
+
+/* Toast notification customization */
+.Toastify__toast-container {
+  width: 450px !important;
+}
+
+.Toastify__close-button--light {
+  position: absolute !important;
+  z-index: 30 !important;
+  right: 10px !important;
+  top: 10px !important;
+}
+
+.Toastify__toast {
+  border-radius: 10px !important;
+  padding: 0px !important;
+  min-height: fit-content !important;
+}
+
+.Toastify__toast-body {
+  padding: 0px !important;
+  margin: 0 !important;
+  align-items: normal !important;
+  display: block !important;
+}
+
 html,
 body {
   padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell,
+    Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
 
 a {
@@ -15,7 +67,7 @@ a {
   box-sizing: border-box;
 }
 
-@media (prefers-color-scheme: dark) {
+/*@media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
   }
@@ -23,4 +75,4 @@ a {
     color: white;
     background: black;
   }
-}
+}*/
