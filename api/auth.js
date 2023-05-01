@@ -45,6 +45,16 @@ const changePassword = async (resetCode, phone, newPassword) =>
     password: newPassword,
   });
 
+//change password for an already logged on user
+const newPassword = async ({ confirm_password, new_password, old_password }, token) =>
+  api.post(
+    "/newPassword",
+    { confirm_password, new_password, old_password },
+    {
+      headers: authorization(token),
+    }
+  );
+
 export {
   loginApi,
   loginWithToken,
@@ -54,4 +64,5 @@ export {
   getToken,
   resetByPhone,
   changePassword,
+  newPassword,
 };

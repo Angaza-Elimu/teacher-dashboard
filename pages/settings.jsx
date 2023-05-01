@@ -1,31 +1,30 @@
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import Layout from "../components/Layout";
-import profileImage from "../assets/images/avatar.png";
-import Input from "../components/Input";
-import { useEffect, useState } from "react";
-// import Camera from "../assets/Camera";
-import Modal from "../components/Modal";
-// import Loading from "../components/Loading";
-import Button from "../components/Button";
+import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 import { isEmpty } from "lodash";
-// import { useSelector } from "react-redux";
-// import { getToken, newPassword as newPasswordApi } from "../api/auth";
+import { useSelector } from "react-redux";
+
+import { getToken, newPassword as newPasswordApi } from "../api/auth";
+import Button from "../components/Button";
+import Layout from "../components/Layout";
+import Input from "../components/Input";
+import Loading from "../components/Loading";
+import Modal from "../components/Modal";
 import Notification from "../components/Notification";
-import { toast } from "react-toastify";
+import profileImage from "../assets/images/avatar.png";
 
 export default function SettingsPage() {
   const router = useRouter();
-  // const { profile } = useSelector((state) => state.profile);
-  const profile = {};
-  // const token = getToken();
+  const { profile } = useSelector((state) => state.profile);
+  const token = getToken();
 
   const [isOpen, setIsOpen] = useState(false);
-  const [firstname, setFirstname] = useState(profile?.firstname || "John");
-  const [lastname, setLastname] = useState(profile?.lastname || "Doe");
-  const [email, setEmail] = useState(profile?.email || "john.doe@example.com");
-  const [phone, setPhone] = useState(profile?.phone || "07012345678");
+  const [firstname, setFirstname] = useState(profile?.firstname || "");
+  const [lastname, setLastname] = useState(profile?.lastname || "");
+  const [email, setEmail] = useState(profile?.email || "");
+  const [phone, setPhone] = useState(profile?.phone || "");
 
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -60,31 +59,24 @@ export default function SettingsPage() {
       confirm_password: confirmNewPassword,
     };
 
-    resetForm();
-    closeModal();
-    toast(<Notification message="Password Changed" type="success" />);
-    setSubmitting(false);
-    setLoading(false);
+    try {
+      const { data, status } = await newPasswordApi({ ...changePasswordData }, token);
+      if (status !== 200)
+        return toast(<Notification message="An error occurred, please retry." type="danger" />);
 
-    // try {
-    //   const { data, status } = await newPasswordApi({ ...changePasswordData }, token);
+      if (data.status === 400) return toast(<Notification message={data.message} type="danger" />);
 
-    //   if (status !== 200)
-    //     return toast(<Notification message="An error occurred, please retry." type="danger" />);
+      closeModal();
+      toast(<Notification message={data.message} type="success" />);
 
-    //   if (data.status === 400) return toast(<Notification message={data.message} type="danger" />);
-
-    //   closeModal();
-    //   toast(<Notification message={data.message} type="success" />);
-
-    //   // reset the form
-    //   resetForm();
-    // } catch (error) {
-    //   toast(<Notification message="An error occurred, please retry." type="danger" />);
-    // } finally {
-    //   setLoading(false);
-    //   setSubmitting(false);
-    // }
+      // reset the form
+      resetForm();
+    } catch (error) {
+      toast(<Notification message="An error occurred, please retry." type="danger" />);
+    } finally {
+      setLoading(false);
+      setSubmitting(false);
+    }
   };
 
   // const handleImageChange = (e) => {
@@ -106,7 +98,7 @@ export default function SettingsPage() {
 
   return (
     <Layout title="Settings">
-      {/* <Loading isOpen={loading} subtitle={loadingMessage} /> */}
+      <Loading isOpen={loading} subtitle={loadingMessage} />
       <div className="relative flex-1 flex">
         <div className="px-5 flex flex-1 flex-col">
           <div className="flex gap-5 items-center">
@@ -115,10 +107,6 @@ export default function SettingsPage() {
                 <p>My Profile</p>
               </div>
             </Link>
-
-            {/* <div className="">
-            <p>Manage accounts</p>
-          </div> */}
           </div>
 
           <div className="flex flex-col gap-10 flex-1 h-full">
@@ -131,7 +119,7 @@ export default function SettingsPage() {
                   alt="profile picture"
                 />
 
-                <label
+                {/* <label
                   className="absolute bg-alerts-info rounded-full p-2 right-0 bottom-0 h-11 w-11 cursor-pointer"
                   htmlFor="imageUpload"
                 >
@@ -141,37 +129,37 @@ export default function SettingsPage() {
                     id="imageUpload"
                     accept=".png, .jpg, .jpeg"
                     // onChange={handleImageChange}
-                  />
-                  {/* <Camera /> */}
-                </label>
+                  /> */}
+                {/* <Camera /> */}
+                {/* </label> */}
               </div>
 
               <div className="grid grid-cols-2 p-3 flex-1 ml-5 gap-8 gap-y-4">
                 <Input
-                  label={"First Name"}
-                  value={firstname}
-                  onChange={(e) => setFirstname(e.target.value)}
                   disabled
+                  label={"First Name"}
+                  onChange={(e) => setFirstname(e.target.value)}
+                  value={firstname}
                 />
                 <Input
                   disabled
                   label={"Last Name"}
-                  value={lastname}
                   onChange={(e) => setLastname(e.target.value)}
+                  value={lastname}
                 />
                 <Input
                   disabled
                   label={"Email Address"}
+                  onChange={(e) => setEmail(e.target.value)}
                   type="email"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
                 />
                 <Input
                   disabled
                   label={"Phone Number"}
+                  onChange={(e) => setPhone(e.target.value)}
                   type="text"
                   value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
                 />
               </div>
             </div>
@@ -215,6 +203,7 @@ export default function SettingsPage() {
           <div className="my-6 space-y-6">
             <Input
               label="Current Password"
+              labelBackgroundColor="bg-[#ffffff]"
               type="password"
               placeholder="••••••••"
               value={currentPassword}
@@ -222,6 +211,7 @@ export default function SettingsPage() {
             />
             <Input
               label="New Password"
+              labelBackgroundColor="bg-[#ffffff]"
               type="password"
               placeholder="••••••••"
               value={newPassword}
@@ -229,6 +219,7 @@ export default function SettingsPage() {
             />
             <Input
               label="Confirm Password"
+              labelBackgroundColor="bg-[#ffffff]"
               type="password"
               placeholder="••••••••"
               value={confirmNewPassword}
@@ -260,10 +251,10 @@ export default function SettingsPage() {
   );
 }
 
-export const getServerSideProps = async ({ req, params }) => {
+export const getServerSideProps = async ({ req, query }) => {
   const token = req.cookies.token;
   //redirect to login if not authenticated
-  // if (!token) return { redirect: { destination: "/" } };
+  if (!token) return { redirect: { destination: "/" } };
 
   // get the profile of the user on the server
   return {

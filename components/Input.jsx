@@ -2,7 +2,15 @@ import { useState } from "react";
 import HiddenEyes from "../assets/HiddenEyes";
 import VisibleEyes from "../assets/VisibleEyes";
 
-export default function Input({ label = "", name, value, type = "text", onChange, ...others }) {
+export default function Input({
+  label = "",
+  labelBackgroundColor = "bg-[#FBFBFB]",
+  name,
+  value,
+  type = "text",
+  onChange,
+  ...others
+}) {
   const [visible, setVisible] = useState(false);
   const [_type, setType] = useState(type);
 
@@ -36,7 +44,7 @@ export default function Input({ label = "", name, value, type = "text", onChange
       />
       <label
         htmlFor={label.toLowerCase().trim().split(" ").join("")}
-        className="absolute top-2.5 left-3 duration-300 ease-out origin-0 text-lg text-neutral-500 font-medium px-1 select-none bg-[#FBFBFB]"
+        className={`absolute top-2.5 left-3 duration-300 ease-out origin-0 text-lg text-neutral-500 font-medium px-1 select-none ${labelBackgroundColor}`}
       >
         {label}
       </label>
