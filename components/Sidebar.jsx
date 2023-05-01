@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-// import { useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import logo from "../public/logo.png";
 import Gear from "../assets/Gear";
@@ -12,11 +12,11 @@ import Minimize from "../assets/Minimize";
 import ChevronDown from "../assets/ChevronDown";
 import ChevronUp from "../assets/ChevronUp";
 import navs from "../config/navs";
-// import Modal from "./Modal";
+import Modal from "./Modal";
 import Button from "./Button";
 import ChevronLeft from "../assets/ChevronLeft";
-// import { getToken, logout, logoutApi } from "../api/auth";
-// import { logout as logoutAction } from "../store/features/profileSlice";
+import { getToken, logout, logoutApi } from "../api/auth";
+import { logout as logoutAction } from "../store/features/profileSlice";
 
 function Sidebar({ onHide }) {
   const [visible, setVisible] = useState("");
@@ -33,8 +33,8 @@ function Sidebar({ onHide }) {
   ]);
   const [selectedGrade, setSelectedGrade] = useState(grades[0]);
   const [showGrades, setShowGrades] = useState(false);
-  // const token = getToken();
-  // const dispatch = useDispatch();
+  const token = getToken();
+  const dispatch = useDispatch();
 
   const preventNavCollapse = (e) => e.stopPropagation();
 
@@ -50,13 +50,13 @@ function Sidebar({ onHide }) {
   };
 
   const handleLogout = () => {
-    // setOpenModal(false);
-    // try {
-    //   logoutApi(token);
-    //   logout();
-    //   dispatch(logoutAction());
-    //   push("/");
-    // } catch (error) {}
+    setOpenModal(false);
+    try {
+      logoutApi(token);
+      logout();
+      dispatch(logoutAction());
+      push("/");
+    } catch (error) {}
   };
 
   useEffect(() => {
@@ -208,11 +208,11 @@ function Sidebar({ onHide }) {
         </div>
       </nav>
 
-      {/* <Modal isOpen={openModal}>
+      <Modal isOpen={openModal}>
         <div className="flex flex-col">
           <div className="flex flex-col justify-start gap-5 mb-5">
             <div className="relative mx-auto h-16 w-16">
-              <Image src={"/images/hexagon.svg"} layout="fill" alt="" />
+              <Image src={"/images/hexagon.svg"} fill alt="" />
             </div>
 
             <h3 className="font-bold text-center text-primary-500">Log out</h3>
@@ -234,7 +234,7 @@ function Sidebar({ onHide }) {
             </div>
           </div>
         </div>
-      </Modal> */}
+      </Modal>
     </>
   );
 }

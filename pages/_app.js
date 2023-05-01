@@ -3,10 +3,12 @@ import Router from "next/router";
 import { persistStore } from "redux-persist";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
+import { ToastContainer } from "react-toastify";
 
 import store from "../store";
 
 import "../styles/globals.css";
+import "react-toastify/dist/ReactToastify.css";
 
 let persistor = persistStore(store);
 
@@ -24,7 +26,8 @@ function MyApp({ Component, pageProps }) {
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        <Component {...pageProps} />;
+        <Component {...pageProps} />
+        <ToastContainer hideProgressBar />
       </PersistGate>
     </Provider>
   );
