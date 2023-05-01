@@ -37,7 +37,7 @@ export default function Modal({ children, isOpen, onClose, loading = false, subt
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className="w-full max-w-lg transform overflow-hidden rounded-2xl bg-light p-5 md:p-6 text-left align-middle shadow-xl transition-all">
+              <Dialog.Panel className="w-full max-w-lg transform rounded-2xl bg-light p-5 md:p-6 text-left align-middle shadow-xl transition-all">
                 {loading && (
                   <p className="mx-auto my-2 mb-8 animate-spin-slow h-12 w-12">
                     <Spinner className="stroke-primary-700 fill-primary-700" />

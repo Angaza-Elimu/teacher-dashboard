@@ -89,10 +89,11 @@ export default function BarChart({
       y: {
         grid: {
           drawOnChartArea: true,
-          borderDash: [15, 10],
-          drawBorder: false,
           lineWidth: 0.6,
           tickWidth: 1.5,
+        },
+        border: {
+          dash: [10, 10],
         },
         min: 0,
         max: 100,

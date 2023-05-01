@@ -1,10 +1,10 @@
 import Image from "next/image";
-import Button from "../components/Button";
-import Layout from "../components/Layout";
-import wipImage from "../assets/images/WIP.png";
+import Button from "../../components/Button";
+import Layout from "../../components/Layout";
+import wipImage from "../../assets/images/WIP.png";
 import { useRouter } from "next/router";
 
-export default function forum() {
+export default function FeedbackPage() {
   const router = useRouter();
 
   return (

@@ -4,7 +4,7 @@ import Layout from "../components/Layout";
 import wipImage from "../assets/images/WIP.png";
 import { useRouter } from "next/router";
 
-export default function forum() {
+export default function NotificationsPage() {
   const router = useRouter();
 
   return (

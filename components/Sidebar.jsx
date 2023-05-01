@@ -14,6 +14,7 @@ import ChevronUp from "../assets/ChevronUp";
 import navs from "../config/navs";
 // import Modal from "./Modal";
 import Button from "./Button";
+import ChevronLeft from "../assets/ChevronLeft";
 // import { getToken, logout, logoutApi } from "../api/auth";
 // import { logout as logoutAction } from "../store/features/profileSlice";
 
@@ -22,6 +23,16 @@ function Sidebar({ onHide }) {
   const [activeLink, setActiveLink] = useState();
   const [openModal, setOpenModal] = useState(false);
   const { pathname, push } = useRouter();
+  const [grades, setGrades] = useState([
+    "Grade 1",
+    "Grade 2",
+    "Grade 3",
+    "Grade 4",
+    "Grade 5",
+    "Grade 6",
+  ]);
+  const [selectedGrade, setSelectedGrade] = useState(grades[0]);
+  const [showGrades, setShowGrades] = useState(false);
   // const token = getToken();
   // const dispatch = useDispatch();
 
@@ -58,7 +69,7 @@ function Sidebar({ onHide }) {
   return (
     <>
       <nav className="flex flex-col h-full select-none">
-        <Link passHref href="/home" className="mt-10 outline-none">
+        <Link passHref href="/students/performance" className="mt-10 outline-none">
           <div className="relative h-10 w-10/12 mx-auto">
             <Image src={logo} fill alt="logo" />
           </div>
@@ -130,6 +141,45 @@ function Sidebar({ onHide }) {
               </div>
             );
           })}
+
+          <div className="mt-auto w-10/12 mx-auto relative mb-3">
+            <Button
+              className="w-full p-2 flex items-center justify-between"
+              name={selectedGrade}
+              onClick={() => setShowGrades((prev) => !prev)}
+              Component={() => (
+                <ChevronLeft
+                  className={`stroke-light h-6 w-6 stroke-2 transition-all duration-300
+                   ${showGrades ? "" : "rotate-180"}
+                  `}
+                />
+              )}
+            />
+            {showGrades && (
+              <div className="absolute -right-[9.5rem] bottom-5 z-50 overflow-hidden shadow-2xl rounded-lg">
+                <div className="bg-light flex flex-col text-lg font-medium">
+                  {grades.map((grade, i) => (
+                    <div
+                      className={`p-3 px-10 cursor-pointer hover:bg-primary-800 transition-all duration-50 hover:text-light ${
+                        grade === selectedGrade && "bg-primary-900/90 shadow-inner text-primary-500"
+                      }`}
+                      onClick={() => {
+                        setShowGrades(false);
+                        setSelectedGrade(grade);
+                        // location.reload();
+                        // router.push("/learn");
+                        // dispatch(setGrade({ class_name, id }));
+                        // router.reload();
+                      }}
+                      key={i}
+                    >
+                      <p>{grade}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
         </div>
 
         <div className="border-t border-neutral-800 p-5 py-2">
@@ -177,7 +227,7 @@ function Sidebar({ onHide }) {
               <Button
                 name="Cancel"
                 type="SECONDARY"
-                className="w-full py-1.5 !text-primary-700 hover:!text-shade-light outline-none"
+                className="w-full py-1.5 !text-primary-700 hover:!text-light outline-none"
                 onClick={() => setOpenModal(false)}
               />
               <Button name="Confirm" className="w-full py-1.5" onClick={handleLogout} />

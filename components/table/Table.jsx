@@ -134,14 +134,16 @@ export default function Table({
           </div> */}
 
           {/* pagination */}
-          <div className="flex gap-3 items-center text-neutral-600 font-medium select-none">
-            <Pagination
-              pageSize={pageSize}
-              totalCount={totalCount}
-              currentPage={currentPage}
-              onPageChange={onPageChange}
-            />
-          </div>
+          {data && (
+            <div className="flex gap-3 items-center text-neutral-600 font-medium select-none">
+              <Pagination
+                pageSize={pageSize}
+                totalCount={totalCount}
+                currentPage={currentPage}
+                onPageChange={onPageChange}
+              />
+            </div>
+          )}
         </div>
       </div>
     </div>
