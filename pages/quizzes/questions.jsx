@@ -114,3 +114,13 @@ export default function Quiz() {
     </Layout>
   );
 }
+
+export const getServerSideProps = async ({ req, query }) => {
+  const token = req.cookies.token;
+  //redirect to login if not authenticated
+  if (!token) return { redirect: { destination: "/" } };
+
+  return {
+    props: {},
+  };
+};

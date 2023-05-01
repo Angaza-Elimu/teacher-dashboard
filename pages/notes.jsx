@@ -78,3 +78,13 @@ Express it as a product of prime factors and pick one factor from two similar fa
     </Layout>
   );
 }
+
+export const getServerSideProps = async ({ req, query }) => {
+  const token = req.cookies.token;
+  //redirect to login if not authenticated
+  if (!token) return { redirect: { destination: "/" } };
+
+  return {
+    props: {},
+  };
+};
