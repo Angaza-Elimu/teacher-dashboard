@@ -2,64 +2,93 @@ import Layout from "../../../components/Layout";
 import ListBox from "../../../components/ListBox";
 import Image from "next/image";
 import emptyImage from "../../../assets/images/empty.png";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import InfoCard from "../../../components/InfoCard";
 import Task from "../../../assets/Task";
 import Clock from "../../../assets/Clock";
 import Profile from "../../../assets/Profile";
 import PieChart from "../../../components/PieChart";
 import { useRouter } from "next/navigation";
+import { getSubjects, getSubtopics, getTopics } from "../../../api/subject";
+import { getToken } from "../../../api/auth";
 
-export default function Homepage() {
-  const [subject, setSubject] = useState("");
-  const [topic, setTopic] = useState("");
-  const [subtopic, setSubtopic] = useState("");
+export default function Homepage({ subjects }) {
+  const [topics, setTopics] = useState([]);
+  const [subtopics, setSubtopics] = useState([]);
+
+  const [selectedSubject, setSelectedSubject] = useState("");
+  const [selectedTopic, setSelectedTopic] = useState("");
+  const [selectedSubtopic, setSelectedSubtopic] = useState("");
+
   const router = useRouter();
+  const token = getToken();
 
   const dataToDisplay = [1, 2];
 
   const handleClick = (ev, el) => {
     const index = el[0].index;
     router.push(
-      `/students/performance/list?subject=${subject}&topic=${topic}&subtopic=${subtopic}&fail=${index}`
+      `/students/performance/list?subject=${selectedSubject}&topic=${selectedTopic}&subtopic=${subtopic}&fail=${index}`
     );
 
     console.log(el[0].index);
   };
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const { data } = await getTopics({
+        token,
+        class_id: "6",
+        subject_id: selectedSubject,
+      });
+      setTopics(data);
+    };
+
+    fetchData();
+  }, [selectedSubject]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const { data } = await getSubtopics({ token, topic_id: selectedTopic });
+      setSubtopics(data);
+    };
+
+    fetchData();
+  }, [selectedTopic]);
+
   return (
     <Layout>
       <h3 className="text-2xl mt-2.5">Student performance</h3>
 
-      <div className="flex w-10/12 mt-3 gap-16">
+      <div className="flex w-10/12 mt-3 gap-5">
         <ListBox
-          options={[
-            { value: "", name: "Select subject" },
-            { value: "subject1", name: "Subject One" },
-            { value: "subject2", name: "Subject Two" },
-          ]}
-          onChange={(value) => setSubject(value)}
+          options={[{ name: "Select subject", value: "" }].concat(
+            subjects
+              .sort((a, b) => a.subject_name.localeCompare(b.subject_name))
+              .map((s) => ({ name: s.subject_name, value: s.id }))
+          )}
+          onChange={(value) => setSelectedSubject(value)}
         />
         <ListBox
-          options={[
-            { value: "", name: "Select topic" },
-            { value: "topic1", name: "Topic One" },
-            { value: "topic2", name: "Topic Two" },
-          ]}
-          onChange={(value) => setTopic(value)}
+          options={[{ value: "", name: "Select topic" }].concat(
+            topics
+              .sort((a, b) => a.topic_name.localeCompare(b.topic_name))
+              .map((t) => ({ name: t.topic_name, value: t.id }))
+          )}
+          onChange={(value) => setSelectedTopic(value)}
         />
         <ListBox
-          options={[
-            { value: "", name: "Select subtopic" },
-            { value: "subtopic1", name: "Subtopic One" },
-            { value: "subtopic2", name: "Subtopic Two" },
-          ]}
-          onChange={(value) => setSubtopic(value)}
+          options={[{ value: "", name: "Select subtopic" }].concat(
+            subtopics
+              .sort((a, b) => a.subtopic_name.localeCompare(b.subtopic_name))
+              .map((s) => ({ name: s.subtopic_name, value: s.id }))
+          )}
+          onChange={(value) => setSelectedSubtopic(value)}
         />
       </div>
 
       <div className="flex flex-col h-full">
-        {!subject || !topic || !subtopic ? (
+        {!selectedSubject || !selectedTopic || !selectedSubtopic ? (
           <>
             <div className="flex items-center justify-center flex-col flex-1 gap-10">
               <div className="relative h-48 aspect-video md:h-[459px] md:w-[583px]">
@@ -121,7 +150,11 @@ export const getServerSideProps = async ({ req, query }) => {
   //redirect to login if not authenticated
   if (!token) return { redirect: { destination: "/" } };
 
+  const { data: subjects } = await getSubjects(token);
+
   return {
-    props: {},
+    props: {
+      subjects,
+    },
   };
 };

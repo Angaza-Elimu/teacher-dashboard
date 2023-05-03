@@ -21,7 +21,7 @@ export default function ListBox({ onChange, options, gray = false }) {
 
   return (
     <div
-      className={`bg-light rounded-lg p-2 px-4 flex justify-between items-center gap-x-3 cursor-pointer relative shadow-sm select-none flex-1 border ${
+      className={`bg-light rounded-lg p-2 px-4 flex justify-between items-center gap-x-3 cursor-pointer relative shadow-sm select-none border ${
         gray ? "border-neutral-700 " : "border-primary-700 "
       }`}
       ref={boxRef}
