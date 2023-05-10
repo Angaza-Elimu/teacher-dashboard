@@ -161,12 +161,12 @@ export default function LoginPage() {
               Sign in to your account
             </p>
 
-            <p className="text-neutral-500 text-center">
+            {/* <p className="text-neutral-500 text-center">
               Don't have an account?{" "}
               <Link href="/signup">
                 <span className="font-semibold text-primary-700 hover:underline">Sign Up</span>
               </Link>
-            </p>
+            </p> */}
           </div>
 
           <div className="mx-auto w-full md:max-w-md flex flex-col justify-start flex-1 mt-10">
